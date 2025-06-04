@@ -1,0 +1,378 @@
+  .product-form-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f8fafc;
+    min-height: 95vh;
+    padding: 1rem;
+  }
+
+  .product-form-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    max-width: 800px;
+    padding: 2.5rem;
+  }
+
+  .form-header {
+    margin-bottom: 2rem;
+  }
+
+  .form-title {
+    font-size: 1.75rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 0.5rem;
+  }
+
+  .form-subtitle {
+    color: #64748b;
+    font-size: 0.95rem;
+  }
+
+  .product-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .input-label {
+    font-weight: 500;
+    color: #334155;
+    font-size: 0.95rem;
+  }
+
+  .required-asterisk {
+    color: #ef4444;
+  }
+
+  .text-input,
+  .number-input,
+  .text-area {
+    padding: 0.75rem 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.2s;
+  }
+
+  .text-input:focus,
+  .number-input:focus,
+  .text-area:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  }
+
+  .text-area {
+    resize: vertical;
+    min-height: 100px;
+  }
+
+  .input-error {
+    border-color: #ef4444;
+  }
+
+  .input-error:focus {
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+  }
+
+  .validation-error {
+    color: #ef4444;
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+  }
+
+  .custom-select {
+    position: relative;
+    padding: 0.75rem 1rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    transition: all 0.2s;
+  }
+
+  .select-open {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  }
+
+  .select-open .select-arrow {
+    transform: rotate(180deg);
+  }
+
+  .select-error {
+    border-color: #ef4444;
+  }
+
+  .selected-values {
+    color: #1e293b;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-grow: 1;
+  }
+
+  .select-placeholder {
+    color: #94a3b8;
+    flex-grow: 1;
+  }
+
+  .select-arrow {
+    margin-left: 0.5rem;
+    transition: transform 0.2s;
+  }
+
+  .select-dropdown {
+    position: absolute;
+    width: 40%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 0.5rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    z-index: 10;
+    overflow: hidden;
+  }
+
+  .options-list {
+    max-height: 200px;
+    overflow-y: auto;
+  }
+
+  .option-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    transition: background 0.1s;
+  }
+
+  .option-item:hover {
+    background: #f8fafc;
+  }
+
+  .option-checkbox {
+    position: absolute;
+    opacity: 0;
+  }
+
+  .custom-checkbox {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #cbd5e1;
+    border-radius: 4px;
+    margin-right: 0.75rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.1s;
+  }
+
+  .option-checkbox:checked+.custom-checkbox {
+    background: #6366f1;
+    border-color: #6366f1;
+  }
+
+  .option-checkbox:checked+.custom-checkbox::after {
+    content: "✓";
+    color: white;
+    font-size: 0.75rem;
+  }
+
+  .option-label {
+    color: #334155;
+  }
+
+  .no-options {
+    padding: 1rem;
+    text-align: center;
+    color: #94a3b8;
+  }
+
+  .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .primary-button {
+    background: #6366f1;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .primary-button:hover {
+    background: #4f46e5;
+  }
+
+  .secondary-button {
+    background: white;
+    color: #64748b;
+    padding: 0.75rem 1.5rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .secondary-button:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+  }
+
+  .header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding: 0 1rem;
+  }
+
+  .left-block {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .breadcrumb {
+    font-weight: 600;
+    font-size: 1rem;
+    color: #222;
+  }
+
+  .subtitle {
+    font-size: 0.9rem;
+    color: #666;
+  }
+
+  .right-block .form-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #333;
+    margin: 0;
+  }
+
+  .select-new {
+    min-width: 100%;
+    flex: 1;
+    position: relative;
+    z-index: 5;
+  }
+/* Medium devices (tablets, 768px and up) */
+@media (max-width: 768px) {
+  .product-form-card {
+    padding: 1.5rem;
+  }
+
+  .header-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 0;
+  }
+
+  .right-block {
+    width: 100%;
+  }
+
+  .form-actions {
+    justify-content: flex-start;
+  }
+
+  .select-dropdown {
+    width: 100%;
+    left: 0;
+    transform: none;
+  }
+}
+
+/* Small devices (phones, 576px and up) */
+@media (max-width: 576px) {
+  .product-form-card {
+    padding: 1rem;
+    border-radius: 8px;
+  }
+
+  .form-title {
+    font-size: 1.5rem;
+  }
+
+  .form-subtitle {
+    font-size: 0.85rem;
+  }
+
+  .text-input,
+  .number-input,
+  .text-area,
+  .custom-select {
+    padding: 0.65rem 0.85rem;
+    font-size: 0.95rem;
+  }
+
+  .form-actions {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .primary-button,
+  .secondary-button {
+    width: 100%;
+    padding: 0.75rem;
+  }
+}
+
+/* Extra small devices (phones, 400px and below) */
+@media (max-width: 400px) {
+  .product-form-wrapper {
+    padding: 1rem 0.5rem;
+  }
+
+  .product-form-card {
+    padding: 1rem 0.75rem;
+  }
+
+  .form-title {
+    font-size: 1.3rem;
+  }
+}
+
+/* Ensure inputs don't zoom on focus in mobile */
+@media (max-width: 576px) {
+  input[type="text"],
+  input[type="number"],
+  textarea,
+  select {
+    font-size: 16px; /* Prevent iOS zoom */
+  }
+}
+
+/* Adjust select dropdown for mobile */
+@media (max-width: 768px) {
+  .select-new {
+    width: 100%;
+  }
+  
+  .react-select__control {
+    min-height: 42px;
+  }
+}
