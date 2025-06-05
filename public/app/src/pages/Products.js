@@ -62,8 +62,8 @@ const Product = () => {
         category_ids: selectedCategories.map(cat => cat.value),
       };
       const res = await ProductList(data);
-      setProducts(res.data.products);
-      setTotalPages(res.data.totalPages);
+      setProducts(res.data.data.products);
+      setTotalPages(res.data.data.totalPages);
     } catch (error) {
       console.error('Error loading products:', error);
     }
@@ -184,7 +184,7 @@ const Product = () => {
 
           <div className="products-footer">
             <div className="pagination-info">
-              <span style={{ color: '#5881FE' }}>Items per page:</span> {products.length}
+              <span style={{ color: '#5881FE' }}>Products per page:</span> {products.length}
             </div>
             <div className="pagination-controls">
               <button
