@@ -190,7 +190,7 @@ const Product = () => {
 
           <div className="products-footer">
             <div className="pagination-info">
-              <span>Products per page:</span> {products.length}
+              <span>Items per page:</span> {products.length}
             </div>
             <div className="pagination-controls">
               <button
