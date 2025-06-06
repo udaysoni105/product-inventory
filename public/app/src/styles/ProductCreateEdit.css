@@ -278,101 +278,104 @@
     position: relative;
     z-index: 5;
   }
-/* Medium devices (tablets, 768px and up) */
-@media (max-width: 768px) {
-  .product-form-card {
-    padding: 1.5rem;
+
+  /* Medium devices (tablets, 768px and up) */
+  @media (max-width: 768px) {
+    .product-form-card {
+      padding: 1.5rem;
+    }
+
+    .header-row {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 0;
+    }
+
+    .right-block {
+      width: 100%;
+    }
+
+    .form-actions {
+      justify-content: flex-start;
+    }
+
+    .select-dropdown {
+      width: 100%;
+      left: 0;
+      transform: none;
+    }
   }
 
-  .header-row {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
-    padding: 0;
+  /* Small devices (phones, 576px and up) */
+  @media (max-width: 576px) {
+    .product-form-card {
+      padding: 1rem;
+      border-radius: 8px;
+    }
+
+    .form-title {
+      font-size: 1.5rem;
+    }
+
+    .form-subtitle {
+      font-size: 0.85rem;
+    }
+
+    .text-input,
+    .number-input,
+    .text-area,
+    .custom-select {
+      padding: 0.65rem 0.85rem;
+      font-size: 0.95rem;
+    }
+
+    .form-actions {
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .primary-button,
+    .secondary-button {
+      width: 100%;
+      padding: 0.75rem;
+    }
   }
 
-  .right-block {
-    width: 100%;
+  /* Extra small devices (phones, 400px and below) */
+  @media (max-width: 400px) {
+    .product-form-wrapper {
+      padding: 1rem 0.5rem;
+    }
+
+    .product-form-card {
+      padding: 1rem 0.75rem;
+    }
+
+    .form-title {
+      font-size: 1.3rem;
+    }
   }
 
-  .form-actions {
-    justify-content: flex-start;
+  /* Ensure inputs don't zoom on focus in mobile */
+  @media (max-width: 576px) {
+
+    input[type="text"],
+    input[type="number"],
+    textarea,
+    select {
+      font-size: 16px;
+      /* Prevent iOS zoom */
+    }
   }
 
-  .select-dropdown {
-    width: 100%;
-    left: 0;
-    transform: none;
-  }
-}
+  /* Adjust select dropdown for mobile */
+  @media (max-width: 768px) {
+    .select-new {
+      width: 100%;
+    }
 
-/* Small devices (phones, 576px and up) */
-@media (max-width: 576px) {
-  .product-form-card {
-    padding: 1rem;
-    border-radius: 8px;
+    .react-select__control {
+      min-height: 42px;
+    }
   }
-
-  .form-title {
-    font-size: 1.5rem;
-  }
-
-  .form-subtitle {
-    font-size: 0.85rem;
-  }
-
-  .text-input,
-  .number-input,
-  .text-area,
-  .custom-select {
-    padding: 0.65rem 0.85rem;
-    font-size: 0.95rem;
-  }
-
-  .form-actions {
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-
-  .primary-button,
-  .secondary-button {
-    width: 100%;
-    padding: 0.75rem;
-  }
-}
-
-/* Extra small devices (phones, 400px and below) */
-@media (max-width: 400px) {
-  .product-form-wrapper {
-    padding: 1rem 0.5rem;
-  }
-
-  .product-form-card {
-    padding: 1rem 0.75rem;
-  }
-
-  .form-title {
-    font-size: 1.3rem;
-  }
-}
-
-/* Ensure inputs don't zoom on focus in mobile */
-@media (max-width: 576px) {
-  input[type="text"],
-  input[type="number"],
-  textarea,
-  select {
-    font-size: 16px; /* Prevent iOS zoom */
-  }
-}
-
-/* Adjust select dropdown for mobile */
-@media (max-width: 768px) {
-  .select-new {
-    width: 100%;
-  }
-  
-  .react-select__control {
-    min-height: 42px;
-  }
-}
