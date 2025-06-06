@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import * as Yup from 'yup';
 import { FiChevronDown, FiChevronUp } from 'react-icons/fi';
 import { categoryService, EditProduct, getProduct } from '../services/Service';
+import * as Constants from "../constants/Constants";
 import '../styles/ProductCreateEdit.css';
 
 const ProductEdit = () => {
@@ -41,7 +42,7 @@ const ProductEdit = () => {
         setCategories(data.data.data);
       } catch (err) {
         setError(err.message);
-        toast.error("Failed to fetch categories");
+        toast.error(Constants.FETCH_CATEGORIES_FAILED);
       } finally {
         setLoading(false);
       }
@@ -51,19 +52,19 @@ const ProductEdit = () => {
 
   // Form validation schema
   const validationSchema = Yup.object().shape({
-    name: Yup.string().trim().required('Name is required.')
-      .max(255, 'Name must be at most 255 characters.'),
+    name: Yup.string().trim().required(Constants.NAME_REQUIRED)
+      .max(255, Constants.PRODUCT_NAME_MAX_LENGTH),
     description: Yup.string()
       .nullable()
-      .max(1000, 'Description must be at most 1000 characters.'),
+      .max(1000, Constants.DESCRIPTION_MAX),
     quantity: Yup.number()
-      .typeError('Quantity must be a number.')
-      .required('Quantity is required.')
-      .min(0, 'Quantity cannot be negative.')
-      .integer('Quantity must be an integer.'),
+      .typeError(Constants.QUANTITY_TYPE)
+      .required(Constants.QUANTITY_REQUIRED)
+      .min(0, Constants.QUANTITY_MIN)
+      .integer(Constants.QUANTITY_INTEGER),
     categories: Yup.array()
-      .min(1, 'At least one category is required.')
-      .of(Yup.number().required('Category is required.')),
+      .min(1, Constants.CATEGORIES_MIN)
+      .of(Yup.number().required(Constants.CATEGORY_REQUIRED)),
   });
 
   // Formik setup
@@ -80,10 +81,10 @@ const ProductEdit = () => {
     onSubmit: async (values) => {
       try {
         await EditProduct(values, id);
-        toast.success("Product Edit successfully!");
+        toast.success(Constants.PRODUCT_EDIT_SUCCESS);
         navigate("/");
       } catch (err) {
-        toast.error(err.response?.data?.message || "Failed to Edit product");
+        toast.error(err.response?.data?.message || Constants.EDIT_PRODUCT_FAILED);
       }
     },
   });

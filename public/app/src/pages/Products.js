@@ -6,6 +6,7 @@ import Select from 'react-select';
 import { toast } from 'react-toastify';
 import { commonDateFormate } from "../helpers/utils";
 import { categoryService, DeleteProduct, ProductList } from '../services/Service';
+import * as Constants from "../constants/Constants";
 import '../styles/Product.css';
 
 const Product = () => {
@@ -65,17 +66,17 @@ const Product = () => {
       setProducts(res.data.data.products);
       setTotalPages(res.data.data.totalPages);
     } catch (error) {
-      toast.error('Failed to load products');
+      toast.error(Constants.LOAD_PRODUCTS_FAILED);
     }
   };
 
   const handleDelete = async (id) => {
     try {
       await DeleteProduct(id);
-      toast.success('Product deleted successfully!');
+      toast.success(Constants.PRODUCT_DELETED_SUCCESS);
       fetchProducts();
     } catch (error) {
-      toast.error('Failed to delete product.');
+      toast.error(Constants.DELETE_PRODUCT_FAILED);
       console.error(error);
     }
   };
