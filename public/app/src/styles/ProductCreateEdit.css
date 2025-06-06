@@ -212,7 +212,7 @@
   .primary-button {
     background: #6366f1;
     color: white;
-    padding: 12px 26px;
+    padding: 14px 34px;
     border: none;
     border-radius: 8px;
     font-weight: 500;
@@ -311,7 +311,7 @@
     color: #e3342f;
     border: 1px solid #cc1f1a;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
-    padding: 12px 26px;
+    padding: 14px 34px;
     border-radius: 6px;
     cursor: pointer;
     transition: background-color 0.2s, box-shadow 0.2s;
