@@ -1,23 +1,20 @@
 import { useFormik } from 'formik';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { FiChevronDown, FiChevronUp } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
-import Select from 'react-select';
+import Select, { components } from 'react-select';
 import { toast } from 'react-toastify';
 import * as Yup from 'yup';
 import { categoryService, createProduct } from '../services/Service';
 import '../styles/ProductCreateEdit.css';
 
 const ProductCreate = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [categories, setCategories] = useState([]);
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [selectedCategories, setSelectedCategories] = useState([]);
-  const dropdownRef = useRef(null);
-
   const navigate = useNavigate();
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
+  // Fetch categories on mount
   useEffect(() => {
     const fetchCategories = async () => {
       setLoading(true);
@@ -26,39 +23,17 @@ const ProductCreate = () => {
         setCategories(data.data.data);
       } catch (err) {
         setError(err.message);
+        toast.error("Failed to fetch categories");
       } finally {
         setLoading(false);
       }
     };
-
     fetchCategories();
   }, []);
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-
-  const formatCategories = (cats) => {
-    return cats.map(cat => ({
-      label: cat.name,
-      value: cat.id,
-    }));
-  };
-
-  const filteredCategories = categories.filter(cat =>
-    cat.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
+  // Form validation schema
   const validationSchema = Yup.object().shape({
-    name: Yup.string().required('Name is required.')
+    name: Yup.string().trim().required('Name is required.')
       .max(255, 'Name must be at most 255 characters.'),
     description: Yup.string()
       .nullable()
@@ -67,15 +42,13 @@ const ProductCreate = () => {
       .typeError('Quantity must be a number.')
       .required('Quantity is required.')
       .min(0, 'Quantity cannot be negative.')
-      .test(
-        'is-valid-format',
-        'Quantity format is invalid.',
-        (value) => /^[\d\s\-()+]+$/.test(String(value))
-      ),
+      .integer('Quantity must be an integer.'),
     categories: Yup.array()
-      .of(Yup.number().required('Category is required.'))
-      .min(1, 'At least one category is required.'),
+      .min(1, 'At least one category is required.')
+      .of(Yup.number().required('Category is required.')),
   });
+
+  // Formik setup
   const formik = useFormik({
     initialValues: {
       name: '',
@@ -84,22 +57,38 @@ const ProductCreate = () => {
       categories: [],
     },
     validationSchema,
-    onSubmit: values => {
-      handleSubmit(values);
-    }
+    onSubmit: async (values) => {
+      try {
+        await createProduct(values);
+        toast.success("Product created successfully!");
+        navigate("/");
+      } catch (err) {
+        toast.error(err.response?.data?.message || "Failed to create product");
+      }
+    },
   });
-  const handleSubmit = async (values) => {
-    try {
-      const response = await createProduct(values);
-      navigate('/');
-      formik.resetForm();
-      toast.success('Product created successfully!');
 
-    } catch (error) {
-      // toast.error('Failed to create product. Please try again.');
-      toast.error(error.response.data.message);
-    }
+  // Memoize formatted categories
+  const formattedCategories = useMemo(
+    () => categories.map(cat => ({ label: cat.name, value: cat.id })),
+    [categories]
+  );
+
+  const selectedCategoryOptions = useMemo(() =>
+    formattedCategories.filter(option => formik.values.categories.includes(option.value)),
+    [formattedCategories, formik.values.categories]
+  );
+
+  // Custom dropdown arrow
+  const CustomDropdownIndicator = (props) => {
+    const { menuIsOpen } = props.selectProps;
+    return (
+      <components.DropdownIndicator {...props}>
+        {menuIsOpen ? <FiChevronUp /> : <FiChevronDown />}
+      </components.DropdownIndicator>
+    );
   };
+
   return (
     <div className="product-form-wrapper">
       <div className="product-form-card">
@@ -114,7 +103,7 @@ const ProductCreate = () => {
                 <button type="button" onClick={() => navigate('/')} className="secondary-button">
                   Cancel
                 </button>
-                <button type="submit" className="primary-button">
+                <button type="submit" className="primary-button" disabled={loading || formik.isSubmitting}>
                   Submit
                 </button>
               </div>
@@ -151,6 +140,9 @@ const ProductCreate = () => {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
             />
+            {formik.touched.description && formik.errors.description && (
+              <div className="validation-error">{formik.errors.description}</div>
+            )}
           </div>
 
           <div className="input-group">
@@ -165,29 +157,30 @@ const ProductCreate = () => {
               value={formik.values.quantity}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              min="1"
+              min="0"
             />
             {formik.touched.quantity && formik.errors.quantity ? (
               <div className="validation-error">{formik.errors.quantity}</div>
             ) : null}
           </div>
+
           <div className="input-group">
             <label htmlFor="categories" className="input-label">
               Product Categories <span className="required-asterisk">*</span>
             </label>
             <div className="select-new">
               <Select
+                inputId="categories"
+                name="categories"
+                aria-label="Select Product Categories"
                 isMulti
                 isSearchable
-                options={formatCategories(categories)}
+                options={formattedCategories}
                 placeholder="Filter by categories..."
                 classNamePrefix="select"
-                value={formatCategories(categories).filter(option =>
-                  formik.values.categories.includes(option.value)
-                )}
+                value={selectedCategoryOptions}
                 onChange={(selectedOptions) => {
                   const selectedIds = selectedOptions.map(option => option.value);
-                  setSelectedCategories(selectedOptions);
                   formik.setFieldValue('categories', selectedIds);
                 }}
                 menuPortalTarget={document.body}
@@ -204,7 +197,7 @@ const ProductCreate = () => {
                   }),
                 }}
                 components={{
-                  DropdownIndicator: () => null,
+                  DropdownIndicator: CustomDropdownIndicator,
                   IndicatorSeparator: () => null,
                 }}
                 noOptionsMessage={({ inputValue }) =>

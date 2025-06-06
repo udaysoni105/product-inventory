@@ -1,34 +1,35 @@
 import { useFormik } from 'formik';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import Select from 'react-select';
+import Select, { components } from 'react-select';
 import { toast } from 'react-toastify';
 import * as Yup from 'yup';
+import { FiChevronDown, FiChevronUp } from 'react-icons/fi';
 import { categoryService, EditProduct, getProduct } from '../services/Service';
 import '../styles/ProductCreateEdit.css';
 
 const ProductEdit = () => {
+  const navigate = useNavigate();
   const { id } = useParams();
-  const [isOpen, setIsOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
   const [categories, setCategories] = useState([]);
   const [product, setProduct] = useState(null);
-  const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [selectedCategories, setSelectedCategories] = useState([]);
-  const dropdownRef = useRef(null);
-  const navigate = useNavigate();
+  const [error, setError] = useState(null);
 
+  // Fetch categories on mount
   useEffect(() => {
     const fetchProduct = async () => {
+      setLoading(true);
       try {
         const res = await getProduct(id);
         setProduct(res.data.product);
-      } catch (error) {
-        console.error('Error fetching product:', error);
+      } catch (err) {
+        console.log(err)
+        setError(err.message);
+      } finally {
+        setLoading(false);
       }
     };
-
     fetchProduct();
   }, [id]);
 
@@ -40,41 +41,17 @@ const ProductEdit = () => {
         setCategories(data.data.data);
       } catch (err) {
         setError(err.message);
+        toast.error("Failed to fetch categories");
       } finally {
         setLoading(false);
       }
     };
-
     fetchCategories();
   }, [id]);
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-
-  const filteredCategories = categories.filter(cat =>
-    cat.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const formatCategories = (cats) => {
-    return cats.map(cat => ({
-      label: cat.name,
-      value: cat.id,
-    }));
-  };
-
-
+  // Form validation schema
   const validationSchema = Yup.object().shape({
-    name: Yup.string().required('Name is required.')
+    name: Yup.string().trim().required('Name is required.')
       .max(255, 'Name must be at most 255 characters.'),
     description: Yup.string()
       .nullable()
@@ -83,42 +60,55 @@ const ProductEdit = () => {
       .typeError('Quantity must be a number.')
       .required('Quantity is required.')
       .min(0, 'Quantity cannot be negative.')
-      .test(
-        'is-valid-format',
-        'Quantity format is invalid.',
-        (value) => /^[\d\s\-()+]+$/.test(String(value))
-      ),
+      .integer('Quantity must be an integer.'),
     categories: Yup.array()
-      .of(Yup.number().required('Category is required.'))
-      .min(1, 'At least one category is required.'),
+      .min(1, 'At least one category is required.')
+      .of(Yup.number().required('Category is required.')),
   });
+
+  // Formik setup
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
       id: id,
       name: product?.name || '',
       description: product?.description || '',
-      quantity: product?.quantity || '',
+      quantity: product?.quantity ?? '',
       categories: product?.categories?.map(cat => cat.id) || [],
     },
     validationSchema,
-    onSubmit: values => {
-      handleSubmit(values);
-    }
+    onSubmit: async (values) => {
+      try {
+        await EditProduct(values, id);
+        toast.success("Product Edit successfully!");
+        navigate("/");
+      } catch (err) {
+        toast.error(err.response?.data?.message || "Failed to Edit product");
+      }
+    },
   });
 
-  const handleSubmit = async (values) => {
-    try {
-      const response = await EditProduct(values, id);
-      console.log(response);
-      formik.resetForm();
-      toast.success('Product Edit successfully!');
-      navigate('/');
-    } catch (error) {
-      // console.log(error.response.data.message);
-      toast.error(error.response.data.message);
-    }
+  // Memoize formatted categories
+  const formattedCategories = useMemo(
+    () => categories.map(cat => ({ label: cat.name, value: cat.id })),
+    [categories]
+  );
+
+  const selectedCategoryOptions = useMemo(() =>
+    formattedCategories.filter(option => formik.values.categories.includes(option.value)),
+    [formattedCategories, formik.values.categories]
+  );
+
+  // Custom dropdown arrow
+  const CustomDropdownIndicator = (props) => {
+    const { menuIsOpen } = props.selectProps;
+    return (
+      <components.DropdownIndicator {...props}>
+        {menuIsOpen ? <FiChevronUp /> : <FiChevronDown />}
+      </components.DropdownIndicator>
+    );
   };
+
   return (
     <div className="product-form-wrapper">
       <div className="product-form-card">
@@ -133,7 +123,7 @@ const ProductEdit = () => {
                 <button type="button" onClick={() => navigate('/')} className="secondary-button">
                   Cancel
                 </button>
-                <button type="submit" className="primary-button">
+                <button type="submit" className="primary-button" disabled={loading || formik.isSubmitting}>
                   Submit
                 </button>
               </div>
@@ -170,6 +160,9 @@ const ProductEdit = () => {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
             />
+            {formik.touched.description && formik.errors.description && (
+              <div className="validation-error">{formik.errors.description}</div>
+            )}
           </div>
 
           <div className="input-group">
@@ -184,31 +177,30 @@ const ProductEdit = () => {
               value={formik.values.quantity}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              min="1"
+              min="0"
             />
             {formik.touched.quantity && formik.errors.quantity ? (
               <div className="validation-error">{formik.errors.quantity}</div>
             ) : null}
           </div>
 
-          <div className="input-group" ref={dropdownRef}>
-            <div className="input-group">
+          <div className="input-group">
               <label htmlFor="categories" className="input-label">
                 Product Categories <span className="required-asterisk">*</span>
               </label>
               <div className="select-new">
                 <Select
+                  inputId="categories"
+                  name="categories"
+                  aria-label="Select Product Categories"
                   isMulti
                   isSearchable
-                  options={formatCategories(categories)}
+                  options={formattedCategories}
                   placeholder="Filter by categories..."
                   classNamePrefix="select"
-                  value={formatCategories(categories).filter(option =>
-                    formik.values.categories.includes(option.value)
-                  )}
+                  value={selectedCategoryOptions}
                   onChange={(selectedOptions) => {
                     const selectedIds = selectedOptions.map(option => option.value);
-                    setSelectedCategories(selectedOptions);
                     formik.setFieldValue('categories', selectedIds);
                   }}
                   menuPortalTarget={document.body}
@@ -225,7 +217,7 @@ const ProductEdit = () => {
                     }),
                   }}
                   components={{
-                    DropdownIndicator: () => null,
+                    DropdownIndicator: CustomDropdownIndicator,
                     IndicatorSeparator: () => null,
                   }}
                   noOptionsMessage={({ inputValue }) =>
@@ -236,7 +228,6 @@ const ProductEdit = () => {
                   <div className="validation-error">{formik.errors.categories}</div>
                 )}
               </div>
-            </div>
           </div>
         </form>
       </div>
