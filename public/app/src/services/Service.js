@@ -14,7 +14,7 @@ export function ProductList(payload) {
         {
           headers: {
             "content-type": Constants.CONTANT_TYPE,
-            "Accept": "application/json"
+            "Accept": Constants.ACCEPT_TYPE
           },
           withCredentials: true,
         }
@@ -40,7 +40,7 @@ export function categoryService(payload) {
         {
           headers: {
             "content-type": Constants.CONTANT_TYPE,
-            "Accept": "application/json"
+            "Accept": Constants.ACCEPT_TYPE
           },
           withCredentials: true,
         }
@@ -64,7 +64,7 @@ export function getProduct(id) {
         {
           headers: {
             "content-type": Constants.CONTANT_TYPE,
-            "Accept": "application/json"
+            "Accept": Constants.ACCEPT_TYPE
           },
           withCredentials: true,
         }
@@ -89,7 +89,7 @@ export const createProduct = (payload) => {
         {
           headers: {
             "content-type": Constants.CONTANT_TYPE,
-            "Accept": "application/json"
+            "Accept": Constants.ACCEPT_TYPE
           },
           withCredentials: true,
         }
@@ -113,7 +113,7 @@ export function DeleteProduct(id) {
         {
           headers: {
             "content-type": Constants.CONTANT_TYPE,
-            "Accept": "application/json"
+            "Accept": Constants.ACCEPT_TYPE
           },
           withCredentials: true,
         }
@@ -127,7 +127,7 @@ export function DeleteProduct(id) {
   });
 }
 
-export const EditProduct = (payload,id) => {
+export const EditProduct = (payload, id) => {
   return new Promise(async (resolve, reject) => {
     axios
       .put(
@@ -138,7 +138,7 @@ export const EditProduct = (payload,id) => {
         {
           headers: {
             "content-type": Constants.CONTANT_TYPE,
-            "Accept": "application/json"
+            "Accept": Constants.ACCEPT_TYPE
           },
           withCredentials: true,
         }

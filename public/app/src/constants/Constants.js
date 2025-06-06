@@ -7,6 +7,8 @@ export const API = "api/";
 
 export const CONTANT_TYPE = "application/json";
 
+export const ACCEPT_TYPE = "application/json";
+
 export const CONTACT_API_ROUTE = "contact";
 
 export const CAREER_API_ROUTE = "career";
