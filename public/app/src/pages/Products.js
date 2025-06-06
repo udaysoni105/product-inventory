@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { FiSearch } from "react-icons/fi";
 import { RiDeleteBin5Fill, RiPencilFill } from 'react-icons/ri';
 import { useNavigate } from 'react-router-dom';
-import Select from 'react-select';
+import Select, { components } from 'react-select';
 import { toast } from 'react-toastify';
 import { commonDateFormate } from "../helpers/utils";
 import { categoryService, DeleteProduct, ProductList } from '../services/Service';
@@ -125,7 +125,29 @@ const Product = () => {
               value={selectedCategories}
               onChange={setSelectedCategories}
               menuPortalTarget={document.body}
+              components={{
+                MultiValueContainer: ({ children, ...props }) => (
+                  <components.MultiValueContainer {...props}>
+                    {selectedCategories.length > 2 && props.data === selectedCategories[0] ? (
+                      <span style={{ marginLeft: 4, padding: 3 }}>
+                        +{selectedCategories.length} more
+                      </span>
+                    ) : (
+                      children
+                    )}
+                  </components.MultiValueContainer>
+                )
+              }}
               styles={{
+                valueContainer: (base) => ({
+                  ...base,
+                  flexWrap: 'nowrap',
+                  overflow: 'hidden'
+                }),
+                multiValue: (base, { data }) => ({
+                  ...base,
+                  display: selectedCategories.length > 2 && data !== selectedCategories[0] ? 'none' : 'flex'
+                }),
                 menuPortal: (base) => ({ ...base, zIndex: 9999 })
               }}
             />
