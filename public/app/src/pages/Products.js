@@ -41,8 +41,8 @@ const Product = () => {
   }, [paginationModel.page, paginationModel.pageSize, sortModel, searchQuery, selectedCategories]);
 
   useEffect(() => {
-  setPaginationModel((prev) => ({ ...prev, page: 0 }));
-}, [searchQuery, selectedCategories]);
+    setPaginationModel((prev) => ({ ...prev, page: 0 }));
+  }, [searchQuery, selectedCategories]);
 
   const formatCategories = (cats) => {
     return cats.map(cat => ({
@@ -65,17 +65,23 @@ const Product = () => {
       setProducts(res.data.data.products);
       setTotalPages(res.data.data.totalPages);
     } catch (error) {
-      console.error('Error loading products:', error);
+      toast.error('Failed to load products');
     }
   };
 
   const handleDelete = async (id) => {
-    await DeleteProduct(id);
-    toast.success('Product Delete successfully!');
-    fetchProducts();
+    try {
+      await DeleteProduct(id);
+      toast.success('Product deleted successfully!');
+      fetchProducts();
+    } catch (error) {
+      toast.error('Failed to delete product.');
+      console.error(error);
+    }
   };
 
   const changePage = (num) => {
+    if (num < 1 || num > totalPages) return;
     setPaginationModel((prev) => ({ ...prev, page: num - 1 }));
   };
 
@@ -179,12 +185,11 @@ const Product = () => {
                 ))}
               </tbody>
             </table>
-
           </div>
 
           <div className="products-footer">
             <div className="pagination-info">
-              <span style={{ color: '#5881FE' }}>Products per page:</span> {products.length}
+              <span>Products per page:</span> {products.length}
             </div>
             <div className="pagination-controls">
               <button
