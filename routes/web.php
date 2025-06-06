@@ -18,10 +18,21 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::post('api/products', [ProductController::class, 'index']);
-Route::post('api/product', [ProductController::class, 'store']);
-Route::get('api/products/{id}', [ProductController::class, 'showProduct']);
-Route::delete('api/deactive_product/{id}', [ProductController::class, 'destroy']);
+// Get all categories
 Route::get('api/categories', [ProductController::class, 'getAllCategories']);
-Route::put('api/edit_product/{id}', [ProductController::class, 'update']);
+
+// List products
+Route::post('api/products', [ProductController::class, 'index']);
+
+// Create product
+Route::post('api/product', [ProductController::class, 'store']);
+
+// Get product by ID
+Route::get('api/products/{id}', [ProductController::class, 'showProduct']);
+
+// Update product
+Route::put('api/products/{id}', [ProductController::class, 'update']);
+
+// Delete product
+Route::delete('api/products/{id}', [ProductController::class, 'destroy']);
 

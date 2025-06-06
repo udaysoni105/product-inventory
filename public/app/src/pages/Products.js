@@ -160,11 +160,16 @@ const Product = () => {
                     {/* <td>{product.categories?.map((cat) => cat.name).join(', ')}</td> */}
                     <td>
                       <div className="tag-wrapper">
-                        {product.categories?.map((cat, idx) => (
+                        {product.categories?.slice(0, 3).map((cat, idx) => (
                           <span key={idx} className="tag">
                             {cat.name}
                           </span>
                         ))}
+                        {product.categories && product.categories.length > 3 && (
+                          <span className="tag more-tag" title={product.categories.slice(3).map(c => c.name).join(', ')}>
+                            +{product.categories.length - 3} more
+                          </span>
+                        )}
                       </div>
                     </td>
                     <td>{commonDateFormate(product.createdAt)}</td>

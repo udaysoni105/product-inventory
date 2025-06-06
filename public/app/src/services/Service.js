@@ -109,7 +109,7 @@ export function DeleteProduct(id) {
       .delete(
         Constants.REACT_APP_API_URL +
         Constants.API +
-        `${Constants.PRODUCT_DEACTIVE_API_ROUTE + "/" + id}`,
+        `${Constants.PRODUCTS_API_ROUTE + "/" + id}`,
         {
           headers: {
             "content-type": Constants.CONTANT_TYPE,
@@ -133,7 +133,7 @@ export const EditProduct = (payload, id) => {
       .put(
         Constants.REACT_APP_API_URL +
         Constants.API +
-        `${Constants.PRODUCT_EDIT_API_ROUTE + "/" + id}`,
+        `${Constants.PRODUCTS_API_ROUTE + "/" + id}`,
         payload,
         {
           headers: {
