@@ -173,12 +173,12 @@ const ProductCreate = () => {
               <Select
                 inputId="categories"
                 name="categories"
-                aria-label="Select Product Categories"
                 isMulti
                 isSearchable
                 options={formattedCategories}
                 placeholder="Filter by categories..."
                 classNamePrefix="select"
+                closeMenuOnSelect={false} 
                 value={selectedCategoryOptions}
                 onChange={(selectedOptions) => {
                   const selectedIds = selectedOptions.map(option => option.value);
@@ -188,14 +188,8 @@ const ProductCreate = () => {
                 menuPlacement="top"
                 styles={{
                   menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                  menu: (provided) => ({
-                    ...provided,
-                    marginBottom: '8px',
-                  }),
-                  control: (base) => ({
-                    ...base,
-                    minHeight: '44px',
-                  }),
+                  menu: (provided) => ({ ...provided, marginBottom: '8px' }),
+                  control: (base) => ({ ...base, minHeight: '44px' }),
                 }}
                 components={{
                   DropdownIndicator: CustomDropdownIndicator,

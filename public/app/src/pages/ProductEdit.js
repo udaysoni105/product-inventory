@@ -193,12 +193,12 @@ const ProductEdit = () => {
                 <Select
                   inputId="categories"
                   name="categories"
-                  aria-label="Select Product Categories"
                   isMulti
                   isSearchable
                   options={formattedCategories}
                   placeholder="Filter by categories..."
                   classNamePrefix="select"
+                  closeMenuOnSelect={false} 
                   value={selectedCategoryOptions}
                   onChange={(selectedOptions) => {
                     const selectedIds = selectedOptions.map(option => option.value);
