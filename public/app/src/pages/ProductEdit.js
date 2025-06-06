@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Select, { components } from 'react-select';
 import { toast } from 'react-toastify';
 import * as Yup from 'yup';
-import { FiChevronDown, FiChevronUp } from 'react-icons/fi';
+import { FiChevronDown, FiChevronUp, FiUser, FiMessageSquare, FiGrid, FiLayers } from 'react-icons/fi';
 import { categoryService, EditProduct, getProduct } from '../services/Service';
 import * as Constants from "../constants/Constants";
 import '../styles/ProductCreateEdit.css';
@@ -82,6 +82,7 @@ const ProductEdit = () => {
       try {
         await EditProduct(values, id);
         toast.success(Constants.PRODUCT_EDIT_SUCCESS);
+        formik.resetForm();
         navigate("/");
       } catch (err) {
         toast.error(err.response?.data?.message || Constants.EDIT_PRODUCT_FAILED);
@@ -121,7 +122,7 @@ const ProductEdit = () => {
             </div>
             <div className="right-block">
               <div className="form-actions">
-                <button type="button" onClick={() => navigate('/')} className="secondary-button">
+                <button type="button" onClick={() => navigate('/')} className="red-cancel-button">
                   Cancel
                 </button>
                 <button type="submit" className="primary-button" disabled={loading || formik.isSubmitting}>
@@ -134,15 +135,18 @@ const ProductEdit = () => {
             <label htmlFor="name" className="input-label">
               Product Name <span className="required-asterisk">*</span>
             </label>
-            <input
-              name="name"
-              type="text"
-              className={`text-input ${formik.touched.name && formik.errors.name ? 'input-error' : ''}`}
-              placeholder="Enter name"
-              value={formik.values.name}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-            />
+            <div className="input-icon-wrapper">
+              <FiUser className="input-icon" />
+              <input
+                name="name"
+                type="text"
+                className={`text-input ${formik.touched.name && formik.errors.name ? 'input-error' : ''}`}
+                placeholder="Enter name"
+                value={formik.values.name}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+              />
+            </div>
             {formik.touched.name && formik.errors.name ? (
               <div className="validation-error">{formik.errors.name}</div>
             ) : null}
@@ -152,15 +156,18 @@ const ProductEdit = () => {
             <label htmlFor="description" className="input-label">
               Description
             </label>
-            <textarea
-              name="description"
-              className="text-area"
-              placeholder="Enter description"
-              rows="4"
-              value={formik.values.description}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-            />
+            <div className="input-icon-wrapper">
+              <FiMessageSquare className="input-icon" />
+              <textarea
+                name="description"
+                className="text-area"
+                placeholder="Enter description"
+                rows="4"
+                value={formik.values.description}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+              />
+            </div>
             {formik.touched.description && formik.errors.description && (
               <div className="validation-error">{formik.errors.description}</div>
             )}
@@ -170,65 +177,73 @@ const ProductEdit = () => {
             <label htmlFor="quantity" className="input-label">
               Quantity <span className="required-asterisk">*</span>
             </label>
-            <input
-              name="quantity"
-              type="number"
-              className={`number-input ${formik.touched.quantity && formik.errors.quantity ? 'input-error' : ''}`}
-              placeholder="Enter quantity"
-              value={formik.values.quantity}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              min="0"
-            />
+            <div className="input-icon-wrapper">
+              <FiGrid className="input-icon" />
+              <input
+                name="quantity"
+                type="number"
+                className={`number-input ${formik.touched.quantity && formik.errors.quantity ? 'input-error' : ''}`}
+                placeholder="Enter quantity"
+                value={formik.values.quantity}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                min="0"
+              />
+            </div>
             {formik.touched.quantity && formik.errors.quantity ? (
               <div className="validation-error">{formik.errors.quantity}</div>
             ) : null}
           </div>
 
           <div className="input-group">
-              <label htmlFor="categories" className="input-label">
-                Product Categories <span className="required-asterisk">*</span>
-              </label>
-              <div className="select-new">
-                <Select
-                  inputId="categories"
-                  name="categories"
-                  isMulti
-                  isSearchable
-                  options={formattedCategories}
-                  placeholder="Filter by categories..."
-                  classNamePrefix="select"
-                  closeMenuOnSelect={false} 
-                  value={selectedCategoryOptions}
-                  onChange={(selectedOptions) => {
-                    const selectedIds = selectedOptions.map(option => option.value);
-                    formik.setFieldValue('categories', selectedIds);
-                  }}
-                  menuPortalTarget={document.body}
-                  menuPlacement="top"
-                  styles={{
-                    menuPortal: (base) => ({ ...base, zIndex: 9999 }),
-                    menu: (provided) => ({
-                      ...provided,
-                      marginBottom: '8px',
-                    }),
-                    control: (base) => ({
-                      ...base,
-                      minHeight: '44px',
-                    }),
-                  }}
-                  components={{
-                    DropdownIndicator: CustomDropdownIndicator,
-                    IndicatorSeparator: () => null,
-                  }}
-                  noOptionsMessage={({ inputValue }) =>
-                    inputValue ? "No categories found" : "No categories available"
-                  }
-                />
-                {formik.touched.categories && formik.errors.categories && (
-                  <div className="validation-error">{formik.errors.categories}</div>
-                )}
-              </div>
+            <label htmlFor="categories" className="input-label">
+              Product Categories <span className="required-asterisk">*</span>
+            </label>
+            <div className="select-icon-wrapper" style={{ position: 'relative' }}>
+              <FiLayers
+                style={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '12px',
+                  transform: 'translateY(-50%)',
+                  color: '#635BFF',
+                  zIndex: 2,
+                  pointerEvents: 'none'
+                }}
+              />
+              <Select
+                inputId="categories"
+                name="categories"
+                isMulti
+                isSearchable
+                options={formattedCategories}
+                placeholder="Filter by categories..."
+                classNamePrefix="select"
+                closeMenuOnSelect={false}
+                value={selectedCategoryOptions}
+                onChange={(selectedOptions) => {
+                  const selectedIds = selectedOptions.map(option => option.value);
+                  formik.setFieldValue('categories', selectedIds);
+                }}
+                menuPortalTarget={document.body}
+                menuPlacement="top"
+                styles={{
+                  menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                  menu: (provided) => ({...provided,marginBottom: '8px'}),
+                  control: (base) => ({...base,minHeight: '44px',paddingLeft: '32px'}),
+                }}
+                components={{
+                  DropdownIndicator: CustomDropdownIndicator,
+                  IndicatorSeparator: () => null,
+                }}
+                noOptionsMessage={({ inputValue }) =>
+                  inputValue ? "No categories found" : "No categories available"
+                }
+              />
+            </div>
+            {formik.touched.categories && formik.errors.categories && (
+                <div className="validation-error">{formik.errors.categories}</div>
+              )}
           </div>
         </form>
       </div>

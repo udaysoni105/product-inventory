@@ -61,7 +61,6 @@
     border: 1px solid #e2e8f0;
     border-radius: 8px;
     font-size: 1rem;
-    transition: all 0.2s;
   }
 
   .text-input:focus,
@@ -88,7 +87,7 @@
   .validation-error {
     color: #ef4444;
     font-size: 0.85rem;
-    margin-top: 0.25rem;
+    margin-top: 0.8rem;
   }
 
   .custom-select {
@@ -213,7 +212,7 @@
   .primary-button {
     background: #6366f1;
     color: white;
-    padding: 0.75rem 1.5rem;
+    padding: 12px 26px;
     border: none;
     border-radius: 8px;
     font-weight: 500;
@@ -279,7 +278,51 @@
     z-index: 5;
   }
 
-  /* Medium devices (tablets, 768px and up) */
+  .input-icon-wrapper {
+    position: relative;
+  }
+
+  .input-icon {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    color: #635BFF;
+    font-size: 1.2rem;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .text-input,
+  .number-input,
+  .text-area {
+    padding-left: 35px;
+    width: 100%;
+    box-sizing: border-box;
+    height: 44px;
+  }
+
+  .text-area {
+    min-height: 100px;
+    resize: vertical;
+  }
+
+  .red-cancel-button {
+    background-color: #ffffff;
+    color: #e3342f;
+    border: 1px solid #cc1f1a;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    padding: 12px 26px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s, box-shadow 0.2s;
+  }
+
+  .red-cancel-button:hover {
+    background-color: #f5f2f2;
+    border: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
   @media (max-width: 768px) {
     .product-form-card {
       padding: 1.5rem;
@@ -307,7 +350,6 @@
     }
   }
 
-  /* Small devices (phones, 576px and up) */
   @media (max-width: 576px) {
     .product-form-card {
       padding: 1rem;
@@ -342,7 +384,6 @@
     }
   }
 
-  /* Extra small devices (phones, 400px and below) */
   @media (max-width: 400px) {
     .product-form-wrapper {
       padding: 1rem 0.5rem;
@@ -357,7 +398,6 @@
     }
   }
 
-  /* Ensure inputs don't zoom on focus in mobile */
   @media (max-width: 576px) {
 
     input[type="text"],
@@ -365,11 +405,9 @@
     textarea,
     select {
       font-size: 16px;
-      /* Prevent iOS zoom */
     }
   }
 
-  /* Adjust select dropdown for mobile */
   @media (max-width: 768px) {
     .select-new {
       width: 100%;

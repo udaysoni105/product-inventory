@@ -205,28 +205,30 @@ const Product = () => {
               >
                 Previous
               </button>
-              {(() => {
-                const maxButtons = 5;
-                let currentPage = paginationModel.page + 1;
-                let startPage = currentPage;
-                if (startPage + maxButtons - 1 > totalPages) {
-                  startPage = Math.max(totalPages - maxButtons + 1, 1);
-                }
-                startPage = Math.max(startPage, 1);
-                const pageNumbers = [];
-                for (let i = 0; i < maxButtons && startPage + i <= totalPages; i++) {
-                  pageNumbers.push(startPage + i);
-                }
-                return pageNumbers.map((pageNum) => (
-                  <button
-                    key={pageNum}
-                    className={`pagination-btn ${currentPage === pageNum ? 'active' : ''}`}
-                    onClick={() => changePage(pageNum)}
-                  >
-                    {pageNum}
-                  </button>
-                ));
-              })()}
+              <div className="page-numbers">
+                {(() => {
+                  const maxButtons = 5;
+                  let currentPage = paginationModel.page + 1;
+                  let startPage = currentPage;
+                  if (startPage + maxButtons - 1 > totalPages) {
+                    startPage = Math.max(totalPages - maxButtons + 1, 1);
+                  }
+                  startPage = Math.max(startPage, 1);
+                  const pageNumbers = [];
+                  for (let i = 0; i < maxButtons && startPage + i <= totalPages; i++) {
+                    pageNumbers.push(startPage + i);
+                  }
+                  return pageNumbers.map((pageNum) => (
+                    <button
+                      key={pageNum}
+                      className={`pagination-btn ${currentPage === pageNum ? 'active' : ''}`}
+                      onClick={() => changePage(pageNum)}
+                    >
+                      {pageNum}
+                    </button>
+                  ));
+                })()}
+              </div>
               <button
                 className="pagination-btn"
                 disabled={paginationModel.page === totalPages - 1}
